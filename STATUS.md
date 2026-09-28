@@ -1,39 +1,39 @@
 # DailySudoku Lite — STATUS
 
-| Field | Value |
-|-------|--------|
-| **Project ID** | `proj_dailysudoku_lite_001` |
-| **Slug** | `dailysudoku-lite` |
-| **Version** | 0.1.0 |
-| **Path** | `/workspace/factory/projects/dailysudoku-lite` |
-| **Status** | `READY_FOR_QA` |
-| **Commit / HEAD** | `58abf35984c4a0a4b5338a55e6945783a69c384d` |
-| **Updated** | 2026-09-28T18:28:00+05:00 (Asia/Karachi) |
-
-## Pipeline
-
-PRD_READY → BUILD → **READY_FOR_QA** → (await QA) → Master dual-clear → push
+**Status:** SHIPPED  
+**Updated:** 2026-09-28T18:30:00+05:00 (PKT)  
+**Version:** 0.1.0  
+**Project ID:** `proj_dailysudoku_lite_001`  
+**Path:** `/workspace/factory/projects/dailysudoku-lite`  
+**Release source SHA:** `d56cf13344a886a4a3ede7b58bbbdcb9efac2cdb` (`d56cf13`, not amended)  
+**Pages:** https://offerpk.github.io/dailysudoku-lite/
 
 ## Gates
 
 | Gate | Result |
 |------|--------|
-| `npm test` | **11/11 passed** (validate 4 + daily 4 + generate 3) |
-| `npm run build` | **green** (tsc + vite + PWA SW; base `/dailysudoku-lite/`) |
+| QA | **PASS** — report: `QA-REPORT.md` |
+| Security | **PASS_WITH_NOTES** — clear to ship; no blockers; report: `SECURITY-REPORT.md` |
+| `npm test` | **11/11 passed** |
+| `npm run build` | **green** (Vite + TypeScript + PWA; base `/dailysudoku-lite/`) |
 
-- [x] Vite + TS + PWA; `base: '/dailysudoku-lite/'`
-- [x] Generator dig + unique validate + solve
-- [x] Play UI: grid, pad, conflicts, timer, pencil
-- [x] Easy/Medium/Hard clue targets + Daily PKT seed
-- [x] Hint (1 free/day + rewarded stub) + ads/remove-ads stubs + settings
-- [x] localStorage best times + streak + adsRemoved + mute
-- [x] Vitest green (11/11)
-- [x] `npm run build` green
-- [x] README + GUIDE-roman-urdu + CHANGELOG 0.1.0
-- [ ] QA pass
-- [ ] Master dual-clear
-- [ ] git push (blocked until dual-clear)
+## v0.1.0 release
+
+DailySudoku Lite MVP: classic 9×9 Easy/Medium/Hard plus Asia/Karachi daily seed, pencil notes, conflicts, timer, hint, best times, streak, ads/remove-ads stubs, PWA offline shell, README, and Roman Urdu guide.
+
+Dual-clear: QA PASS + Security PASS_WITH_NOTES. Security notes are non-blocking (localStorage boolean coercion, `.env*` ignore hygiene, dev-only Vitest audit findings, and host CSP guidance). No security code edits were made.
+
+## Deployment
+
+- Repository: https://github.com/OfferPk/dailysudoku-lite
+- Release: https://github.com/OfferPk/dailysudoku-lite/releases/tag/v0.1.0
+- GitHub Pages base: `/dailysudoku-lite/`
+- Deployment branch: `gh-pages`
+- `.nojekyll`: included for Pages
 
 ## Notes
 
-TubeSort remains SKIPPED. Original branding — no Meowdoku / NYT IP. Classic 9×9 only. No real AdMob. Standing by FAIL-only.
+- Classic 9×9 Sudoku; original DailySudoku Lite branding; no Meowdoku / NYT IP.
+- TubeSort remains SKIPPED.
+- No real AdMob or IAP keys; ads and remove-ads are stubs.
+- Keep `base: '/dailysudoku-lite/'` in `vite.config.ts`.
