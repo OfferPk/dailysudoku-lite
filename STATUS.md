@@ -7,7 +7,7 @@
 | **Version** | 0.1.0 |
 | **Path** | `/workspace/factory/projects/dailysudoku-lite` |
 | **Status** | `READY_FOR_QA` |
-| **Commit / HEAD** | see `git rev-parse HEAD` (local; no push) |
+| **Commit / HEAD** | `58abf35984c4a0a4b5338a55e6945783a69c384d` |
 | **Updated** | 2026-09-28T18:28:00+05:00 (Asia/Karachi) |
 
 ## Pipeline
