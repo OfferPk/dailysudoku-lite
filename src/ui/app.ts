@@ -298,8 +298,10 @@ function renderPlay(): void {
   $('#hud-diff').textContent = diffLabel;
   $('#hud-timer').textContent = formatTime(play.elapsedMs);
   $('#btn-pencil').classList.toggle('active', play.pencil);
+  $('#btn-pencil').setAttribute('aria-pressed', String(play.pencil));
   $('#btn-pencil').textContent = play.pencil ? '✏️ Pencil on' : '✏️ Pencil';
   $('#btn-conflicts').classList.toggle('active', play.showConflicts);
+  $('#btn-conflicts').setAttribute('aria-pressed', String(play.showConflicts));
 
   const conflicts = play.showConflicts ? findConflictCells(play.board) : new Set<number>();
   const grid = $('#sudoku-grid');
@@ -328,6 +330,11 @@ function renderPlay(): void {
     if (play.selected >= 0 && (r === sr || c === sc)) cell.classList.add('peer');
 
     const val = play.board[i]!;
+    const noteDigits = Array.from({ length: 9 }, (_, d) => (play!.notes[i]! & (1 << d) ? d + 1 : 0)).filter(Boolean);
+    const cellContent = val !== 0
+      ? `${isGiven(i) ? 'given ' : ''}${val}`
+      : noteDigits.length ? `notes ${noteDigits.join(', ')}` : 'empty';
+    cell.setAttribute('aria-label', `Row ${r + 1}, column ${c + 1}, ${cellContent}${i === play.selected ? ', selected' : ''}`);
     if (val !== 0) {
       cell.textContent = String(val);
     } else if (play.notes[i]!) {
@@ -396,23 +403,46 @@ function buildDom(root: HTMLElement): void {
   root.innerHTML = `
     <section class="screen" data-screen="home">
       <div class="panel home-panel">
-        <div class="logo-mark" aria-hidden="true">＃</div>
-        <h1 class="logo">DailySudoku Lite</h1>
-        <p class="tagline">Classic 9×9 · Offline · Daily (Asia/Karachi)</p>
-        <p class="progress-line" id="home-daily-meta">Daily ready</p>
-        <p class="progress-line streak-line" id="home-streak" hidden>Streak: <strong id="streak-count">0</strong></p>
-        <div class="best-row">
-          <span>Best E <strong id="best-easy">—</strong></span>
-          <span>M <strong id="best-medium">—</strong></span>
-          <span>H <strong id="best-hard">—</strong></span>
-          <span>D <strong id="best-daily">—</strong></span>
-        </div>
-        <button type="button" class="btn primary" id="btn-daily">Daily Puzzle</button>
-        <button type="button" class="btn secondary" id="btn-easy">Easy</button>
-        <button type="button" class="btn secondary" id="btn-medium">Medium</button>
-        <button type="button" class="btn secondary" id="btn-hard">Hard</button>
-        <button type="button" class="btn ghost" id="btn-howto">How to play</button>
-        <button type="button" class="btn ghost" id="btn-settings">Settings</button>
+        <header class="home-brand">
+          <div class="logo-mark" aria-hidden="true">9</div>
+          <p class="eyebrow">A QUIET MOMENT, EVERY DAY</p>
+          <h1 class="logo">Daily Sudoku <span>Lite</span></h1>
+          <p class="tagline">A classic 9×9 challenge, ready wherever you are.</p>
+        </header>
+        <section class="daily-card" aria-label="Daily puzzle">
+          <div class="daily-copy">
+            <span class="eyebrow">TODAY · ASIA/KARACHI</span>
+            <p class="progress-line" id="home-daily-meta">Daily ready</p>
+          </div>
+          <button type="button" class="btn primary" id="btn-daily">
+            <span>Play today's puzzle</span><span class="btn-arrow" aria-hidden="true">→</span>
+          </button>
+        </section>
+        <p class="progress-line streak-line" id="home-streak" hidden>
+          <span class="streak-flare" aria-hidden="true">✦</span>
+          <span><strong id="streak-count">0</strong> day streak</span>
+        </p>
+        <section class="home-stats" aria-label="Personal best times">
+          <div class="stats-heading"><span>PERSONAL BESTS</span><span>FASTEST TIME</span></div>
+          <div class="best-row">
+            <span><small>Easy</small><strong id="best-easy">—</strong></span>
+            <span><small>Medium</small><strong id="best-medium">—</strong></span>
+            <span><small>Hard</small><strong id="best-hard">—</strong></span>
+            <span><small>Daily</small><strong id="best-daily">—</strong></span>
+          </div>
+        </section>
+        <section class="difficulty-area" aria-label="Choose a difficulty">
+          <div class="section-heading"><span>CHOOSE YOUR PACE</span><span>Classic 9×9</span></div>
+          <div class="difficulty-grid">
+            <button type="button" class="btn secondary difficulty-card" id="btn-easy"><span class="difficulty-name">Easy</span><span class="difficulty-note">A gentle start</span><span class="difficulty-mark" aria-hidden="true">01</span></button>
+            <button type="button" class="btn secondary difficulty-card" id="btn-medium"><span class="difficulty-name">Medium</span><span class="difficulty-note">Find your rhythm</span><span class="difficulty-mark" aria-hidden="true">02</span></button>
+            <button type="button" class="btn secondary difficulty-card" id="btn-hard"><span class="difficulty-name">Hard</span><span class="difficulty-note">Take your time</span><span class="difficulty-mark" aria-hidden="true">03</span></button>
+          </div>
+        </section>
+        <nav class="home-links" aria-label="More options">
+          <button type="button" class="btn ghost home-link" id="btn-howto"><span>How to play</span><span class="link-arrow" aria-hidden="true">↗</span></button>
+          <button type="button" class="btn ghost home-link" id="btn-settings"><span>Settings</span><span class="link-arrow" aria-hidden="true">↗</span></button>
+        </nav>
       </div>
     </section>
 
